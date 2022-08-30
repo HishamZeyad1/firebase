@@ -1,5 +1,6 @@
 
 import 'package:firebase/register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LaunchScreen extends StatefulWidget {
@@ -14,9 +15,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    bool isloged=FirebaseAuth.instance.currentUser!=null;
     Future.delayed(
       Duration(seconds: 3),
-      () => Navigator.pushReplacementNamed(context, '/home_screen'/*'/register_screen'*/),
+      () => Navigator.pushReplacementNamed(context,isloged?'/home_screen':'/register_screen'),
     );
   }
 
@@ -30,16 +32,23 @@ class _LaunchScreenState extends State<LaunchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.orange, Colors.blue],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight),
-        ),
-        child: Center(
-          child: Text(
-            "Flutter Firebase",
-          ),
+        // decoration: BoxDecoration(
+        //   // gradient: LinearGradient(
+        //   //     colors: [Colors.orange, Colors.blue],
+        //   //     begin: Alignment.topLeft,
+        //   //     end: Alignment.bottomRight),
+        //   image: DecorationImage(image: AssetImage("images/note1.png",),fit: BoxFit.contain,),
+        // ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(alignment: Alignment.center,child: Image.asset("images/note1.png",fit: BoxFit.cover,height: 100,width: 100,)),
+            SizedBox(height: 10,),
+            Text(
+              "Note App",style: TextStyle(color: Colors.black,fontSize: 19,fontWeight: FontWeight.w400),
+            ),
+          ],
         ),
       ),
     );

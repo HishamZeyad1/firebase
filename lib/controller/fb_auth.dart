@@ -30,25 +30,30 @@ class FbAuth{
     }
     return false;
   }
-  Future<bool> createAccount({required String emailAddress,required String password}) async {
+  Future<String?> createAccount({required String emailAddress,required String password}) async {
     try {
       userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
       if(userCredential!=null && userCredential!.user !=null){
-        return true;
+        print(userCredential!.user);
+        print(userCredential!.user!.email);
+        return null;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
+        return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
+        return "The account already exists for that email.";
       }
     } catch (e) {
       print(e);
+      return e.toString();
     }
-    return false;
+    return "Some error has occured";
   }
 
   Future<bool> loginAnyomous() async {
