@@ -1,9 +1,11 @@
 
-import 'package:firebase/Archive/login_screen.dart';
+// import 'package:firebase/Archive/login_screen.dart';
+import 'package:firebase/add_note.dart';
 import 'package:firebase/fb_storage.dart';
 // import 'package:firebase/home_screen.dart.dart';
 import 'package:firebase/home_screen.dart';
 import 'package:firebase/register_screen.dart';
+import 'package:firebase/login_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +33,14 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.teal,
-        // fontFamily: "laila",
+        // buttonColor:Colors.teal ,
+        textTheme: TextTheme(headline6: TextStyle(fontSize: 20,color: Colors.white)),
+        fontFamily: "Noto Serif"/*"laila"*/,
         // iconTheme: IconThemeData(color:Colors.teal ),
-        textTheme: GoogleFonts.lailaTextTheme(
-          Theme.of(context).textTheme,
-        ),
+
+        // textTheme: GoogleFonts.lailaTextTheme(
+        //   Theme.of(context).textTheme,
+        // ),
       ),
       initialRoute:'/launch_screen' ,
       routes: {
@@ -43,6 +48,7 @@ class MyApp extends StatelessWidget {
         '/register_screen':(BuildContext)=>RegisterScreen(),
         '/login_screen':(BuildContext)=>LoginScreen(),
         '/home_screen':(BuildContext)=>HomeScreen(),
+        '/add_note':(BuildContext)=>AddNote(),
 
         // '/home_screen':(BuildContext)=>HomeScreen(),
         // '/fb_storage':(BuildContext)=>FbStorage(),

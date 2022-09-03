@@ -10,13 +10,13 @@ class AppTextField extends StatelessWidget {
   late final FormFieldValidator<String>? validationFn/*=(val) {return "dd";}*/;
 
   late final FormFieldSetter<String>? savedFn/*=(val) {}*/;
-
+  int? maxLine;
   bool? obscure;
 
   AppTextField(
       {required this.hintText,
       required this.icon,
-      this.lasticon,this.obscure=false,
+      this.lasticon,this.obscure=false,this.maxLine=1,
       this.keyboardType = TextInputType.text /*,this.controller*/,
       required this.validationFn,
       required this.savedFn,});
@@ -25,7 +25,7 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
-      obscureText: obscure!,
+      obscureText: obscure!,minLines: 1,maxLines: maxLine,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         hintText: hintText,
