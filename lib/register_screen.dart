@@ -1,4 +1,6 @@
-import 'package:firebase/Archive/login_screen.dart';
+// import 'package:firebase/Archive/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/login_screen.dart';
 import 'package:firebase/controller/fb_auth.dart';
 import 'package:firebase/home_screen.dart';
 import 'package:firebase/widget/AppTextField.dart';
@@ -25,7 +27,7 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen>with Helpers{
+class _RegisterScreenState extends State<RegisterScreen> with Helpers {
   late UserCredential userCredential;
   int clicked = 0;
 
@@ -136,24 +138,31 @@ class _RegisterScreenState extends State<RegisterScreen>with Helpers{
                   //     email = val;
                   //   },
                   // ),
-                  AppTextField(hintText: "Enter your Email",
-                      icon: Icons.email,keyboardType:TextInputType.emailAddress,
-                      validationFn: (val) {
-                        if (val != null && val.length > 25) {
-                          return "email can not to be larger than 100";
-                        }
-                        else if (val != null && val.length < 3) {
-                          return "email can not to be less than 3";
-                        }
-                        return null;
-                      },
-                      savedFn: (val) {email = val;},
-                      ),
+                  AppTextField(
+                    hintText: "Enter your Email",
+                    icon: Icons.email,
+                    keyboardType: TextInputType.emailAddress,
+                    validationFn: (val) {
+                      if (val != null && val.length > 25) {
+                        return "email can not to be larger than 100";
+                      }
+                      else if (val != null && val.length < 3) {
+                        return "email can not to be less than 3";
+                      }
+                      return null;
+                    },
+                    savedFn: (val) {
+                      email = val;
+                    },
+                  ),
                   SizedBox(
                     height: 10,
                   ),
-                  AppTextField(hintText: "Enter your Password",obscure:true,
-                    icon: Icons.lock,keyboardType:TextInputType.visiblePassword,
+                  AppTextField(
+                    hintText: "Enter your Password",
+                    obscure: true,
+                    icon: Icons.lock,
+                    keyboardType: TextInputType.visiblePassword,
                     validationFn: (val) {
                       if (val != null && val.length > 25) {
                         return "password can not to be larger than 100";
@@ -162,7 +171,9 @@ class _RegisterScreenState extends State<RegisterScreen>with Helpers{
                       }
                       return null;
                     },
-                    savedFn: (val) {password = val; },
+                    savedFn: (val) {
+                      password = val;
+                    },
                   ),
 
                   SizedBox(
@@ -198,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen>with Helpers{
                     Navigator.of(context).pushNamed("/login_screen");
                   },
                   child: Text(
-                    "Sign In",
+                    "Sign Up",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   style: ButtonStyle(
@@ -222,10 +233,19 @@ class _RegisterScreenState extends State<RegisterScreen>with Helpers{
           emailAddress: email!,
           password: password!);
       Navigator.of(context).pop();
-      String message = created==null? 'Created successfully' : 'Create failed:$created';
-      showSnackBar(context: context, message: message, error: !(created==null));
-      if(created==null){
-        Navigator.of(context).pushNamed("/home_screen");
+      String message = created == null
+          ? 'Created successfully'
+          : 'Create failed:$created';
+      showSnackBar(
+          context: context, message: message, error: !(created == null));
+      if (created == null) {
+        await FirebaseFirestore.instance.collection("users").
+        add({
+          "username": username,
+          "email": email,
+          "userId": FirebaseAuth.instance.currentUser?.uid
+        }).then((value) => print("done")).onError((error, stackTrace) => print("Error: "+error.toString()));
+        Navigator.of(context).pushNamed("/login_screen");
       }
       print("created:$created");
     }

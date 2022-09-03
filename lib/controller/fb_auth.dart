@@ -9,7 +9,7 @@ class FbAuth{
 
 
 
-  Future<bool> signEmailAndPassword({required String emailAddress,required String password}) async {
+  Future<String?> signEmailAndPassword({required String emailAddress,required String password}) async {
     try {
       print("enter here");
       userCredential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -17,7 +17,8 @@ class FbAuth{
           password: password
       );
       if (userCredential!=null && userCredential!.user != null){
-        return true;
+        // return true;
+        return null;
       }
       // print("is Logged:${FirebaseAuth.instance.currentUser!=null}");
 
@@ -27,8 +28,12 @@ class FbAuth{
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
       }
+      return e.code;
+    }catch(e){
+      return "Something wrong has occurred";
+      // return e.toString();
+
     }
-    return false;
   }
   Future<String?> createAccount({required String emailAddress,required String password}) async {
     try {
@@ -49,11 +54,13 @@ class FbAuth{
         print('The account already exists for that email.');
         return "The account already exists for that email.";
       }
+      return e.code;
     } catch (e) {
       print(e);
-      return e.toString();
+      // return e.toString();
+      return "Something wrong has occurred";
+
     }
-    return "Some error has occured";
   }
 
   Future<bool> loginAnyomous() async {
