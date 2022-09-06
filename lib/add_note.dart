@@ -293,7 +293,4 @@ class _AddNoteState extends State<AddNote> with Helpers {
     }
   }
 }
-<<<<<<< HEAD
-=======
-//***************
->>>>>>> c3a2c8f (Add Note has been done (update))
+//*******************************
