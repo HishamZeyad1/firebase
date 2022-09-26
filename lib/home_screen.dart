@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/edit_note.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,8 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  CollectionReference noteref = FirebaseFirestore.instance.collection("notes");
+
   @override
   Widget build(BuildContext context) {
+    print("UID: "+FirebaseAuth.instance.currentUser!.uid);
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
@@ -43,89 +49,115 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         color: Colors.grey.shade300,
-        child: ListView(children: [
-          // Text("Good Job!"),
-          SizedBox(
-            height: 5,
-          ),
-          Card(
-            elevation: 3,
-            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  15), /*side: BorderSide(color: Colors.teal)*/
-            ),
-            child: ListTile(
-              horizontalTitleGap: 15,
-              minVerticalPadding: 0,
-              contentPadding: EdgeInsets.all(10),
-              /*minLeadingWidth: 0,*/
-              leading: Container(
-                color: Colors.green,
-                width: 77,
-                height: 77,
-                margin: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                // constraints: BoxConstraints(minWidth: 120,minHeight: 120,maxHeight: 200,maxWidth: 200,),
-                child: Image.network(
-                  "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" /*"images/3.png"*/,
-                  fit: BoxFit.cover, /*width: 200,height: 200,*/
-                ),
-              ),
-              title: Text("Title"),
-              subtitle: Text(
-                  "consistent pageview and exposes a pageToken that allows control over when to fetch additional results",
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis),
-              trailing: Icon(Icons.edit, color: Colors.teal.shade500),
-            ),
+        child: StreamBuilder(
+            stream: noteref.where("userId",isEqualTo:FirebaseAuth.instance.currentUser!.uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("1");
+                return Center(child: CircularProgressIndicator(value: 20,color: Colors.blue,strokeWidth: 2.2,));
+              }
+              else if(snapshot.hasData&&snapshot.data!=null){
+                print("2");
+                print(snapshot.hasData);
+                QuerySnapshot querySnapshot=snapshot.data as QuerySnapshot;
+              List<QueryDocumentSnapshot> docs=querySnapshot.docs;
+                print(docs.length);
+                return docs.length!=0?
+                 ListView.builder(itemBuilder: (context, index) {
+                   String title=docs[index]['title'].toString();
+                   String note=docs[index]['note'].toString();
+                   String imageUrl=docs[index]['imageUrl'].toString();
+                   String documentId=docs[index].id;
 
-            // child: Card(
-            //   child: Container(
-            //     height: 100,padding: EdgeInsets.all(5),
-            //     child: Column(
-            //       children: [
-            //           Row(
-            //             mainAxisAlignment: MainAxisAlignment.start,
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Image.asset(
-            //                 "images/3.png",
-            //                 fit: BoxFit.cover,
-            //                 width: 70,
-            //                 height: 70,
-            //               ),
-            //               SizedBox(
-            //                 width: 20,
-            //               ),
-            //               Column(
-            //                 mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Text("Title"),
-            //                   SizedBox(
-            //                     height: 7,
-            //                   ),
-            //                   Wrap(children:[ Text("consistent consistent kdkj kjjj"/*,maxLines: 1*/,overflow:TextOverflow.clip ,)]),
-            //                 ],
-            //               ),
-            //               SizedBox(width: 10,),
-            //               SizedBox(
-            //                 width: 50,
-            //                 height: 50,
-            //                 child: IconButton(
-            //                   onPressed: () {},
-            //                   icon: Icon(Icons.edit),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //       ],
-            //     ),
-            //   ),
-            // ))
-            // ],
-          ),
-        ]),
+                return Column(
+                  children: [
+                  SizedBox(
+                  height: 5,
+                  ),
+                  Dismissible(
+                    key: UniqueKey(),
+                    confirmDismiss:(DismissDirection direction) async{
+                      bool b1=false;
+                      bool b2=false;
+                      try{
+                        print("******1*********");
+                        bool b1=await FirebaseStorage.instance.refFromURL(imageUrl).delete().then((value) => true).onError((error, stackTrace) => false);
+                        print("******2*********");
+                        bool b2= await noteref.doc(documentId).delete().then((value) => true).onError((error, stackTrace) => false);
+                        print(b1&&b2);
+                        return b1&&b2;
+                      }catch(error){return false;}
+                      print("deleted");
+                    },
+                    child: Card(
+                    elevation: 3,
+                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                    15), /*side: BorderSide(color: Colors.teal)*/
+                    ),
+                    child:ListTile(
+                    horizontalTitleGap: 15,
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.all(10),
+                    /*minLeadingWidth: 0,*/
+                    leading: Container(
+                    color: Colors.green,
+                    width: 77,
+                    height: 77,
+                    margin: EdgeInsets.zero,
+                    padding: EdgeInsets.zero,
+                    // constraints: BoxConstraints(minWidth: 120,minHeight: 120,maxHeight: 200,maxWidth: 200,),
+                    child: Image.network(imageUrl,
+                    // "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" /*"images/3.png"*/,
+                    fit: BoxFit.cover, /*width: 200,height: 200,*/
+                    ),
+                    ),
+                    title: Text(title/*"Title"*/),
+                    subtitle: Text(
+                    note,
+                    // "consistent pageview and exposes a pageToken that allows control over when to fetch additional results",
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis),
+                    trailing: IconButton(onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        return EditNote(documentId:documentId,title: title, note: note,imageUrl:imageUrl);
+                      }));
+                    }, icon: Icon(Icons.edit, color: Colors.teal.shade500)),
+                    ),
+                    ),
+                  ),
+                  ]
+                );
+              },itemCount:docs.length ,):
+              Container(
+                // width: 200,
+                // height: 200,
+                // color: Colors.black,
+                alignment: Alignment.center,
+                child: Text("No Data"),
+              );
+              }
+              else if(snapshot.hasError){
+                print("3");
+                return Container(
+                  width: 50,
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Text("Something Error has occurred "),
+                );
+              }else{
+                print("4");
+                return Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  child: Text("No Data"),
+                );
+              }
+            },
+        ),
       ),
     );
   }

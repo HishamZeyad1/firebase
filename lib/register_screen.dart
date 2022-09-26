@@ -145,8 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Helpers {
                     validationFn: (val) {
                       if (val != null && val.length > 25) {
                         return "email can not to be larger than 100";
-                      }
-                      else if (val != null && val.length < 3) {
+                      } else if (val != null && val.length < 3) {
                         return "email can not to be less than 3";
                       }
                       return null;
@@ -192,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Helpers {
                   primary: Colors.teal.shade300,
                   shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadiusDirectional.all(Radius.circular(20))),
+                          BorderRadiusDirectional.all(Radius.circular(20))),
                 ),
                 onPressed: () async {
                   await signUp();
@@ -214,7 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> with Helpers {
                   ),
                   style: ButtonStyle(
                       overlayColor:
-                      MaterialStateProperty.all(Colors.transparent)),
+                          MaterialStateProperty.all(Colors.transparent)),
                 ),
               ],
             ),
@@ -229,26 +228,24 @@ class _RegisterScreenState extends State<RegisterScreen> with Helpers {
     if (formdata!.validate()) {
       formdata.save();
       SharedComponent.showLoading(context);
-      String? created = await FbAuth().createAccount(
-          emailAddress: email!,
-          password: password!);
+      String? created = await FbAuth()
+          .createAccount(emailAddress: email!, password: password!);
       Navigator.of(context).pop();
-      String message = created == null
-          ? 'Created successfully'
-          : 'Create failed:$created';
-      showSnackBar(
-          context: context, message: message, error: !(created == null));
+      String message =
+          created == null ? 'Created successfully' : 'Create failed:$created';
       if (created == null) {
-        await FirebaseFirestore.instance.collection("users").
-        add({
+        await FirebaseFirestore.instance.collection("users").add({
           "username": username,
           "email": email,
           "userId": FirebaseAuth.instance.currentUser?.uid
-        }).then((value) => print("done")).onError((error, stackTrace) => print("Error: "+error.toString()));
-        Navigator.of(context).pushNamed("/login_screen");
+        }).then((value) {
+          Navigator.of(context).pushReplacementNamed("/login_screen");
+          print("done");
+        }).onError((error, stackTrace){print("Error: " + error.toString());});
       }
+      showSnackBar(
+          context: context, message: message, error: !(created == null));
       print("created:$created");
     }
   }
-
 }
