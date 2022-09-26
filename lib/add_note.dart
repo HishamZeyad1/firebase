@@ -44,9 +44,9 @@ class _AddNoteState extends State<AddNote> with Helpers {
                 icon: Icons.title,
                 validationFn: (val) {
                   if (val != null && val.length > 25) {
-                    return "Note Title can not to be larger than 25";
+                    return "email can not to be larger than 100";
                   } else if (val != null && val.length < 3) {
-                    return "Note Title can not to be less than 3";
+                    return "email can not to be less than 3";
                   }
                   return null;
                 },
@@ -61,10 +61,10 @@ class _AddNoteState extends State<AddNote> with Helpers {
                 icon: Icons.description,
                 maxLine: 5,
                 validationFn: (val) {
-                  if (val != null && val.length > 100) {
-                    return "Note Details can not to be larger than 100";
+                  if (val != null && val.length > 25) {
+                    return "email can not to be larger than 100";
                   } else if (val != null && val.length < 3) {
-                    return "Note Details can not to be less than 3";
+                    return "email can not to be less than 3";
                   }
                   return null;
                 },
@@ -285,7 +285,7 @@ class _AddNoteState extends State<AddNote> with Helpers {
         });
         Navigator.of(context).pop();
       }else{
-        showSnackBar(context: context, message: "please choose an image",error: true);
+        showSnackBar(context: context, message: "You must add an image",error: true);
 
       }
 
@@ -293,4 +293,4 @@ class _AddNoteState extends State<AddNote> with Helpers {
     }
   }
 }
-//*******************************
+//***************
