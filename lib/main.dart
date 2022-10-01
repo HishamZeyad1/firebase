@@ -1,7 +1,7 @@
-
 // import 'package:firebase/Archive/login_screen.dart';
 import 'package:firebase/add_note.dart';
 import 'package:firebase/fb_storage.dart';
+
 // import 'package:firebase/home_screen.dart.dart';
 import 'package:firebase/home_screen.dart';
 import 'package:firebase/register_screen.dart';
@@ -25,6 +25,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -34,21 +35,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
         // buttonColor:Colors.teal ,
-        textTheme: TextTheme(headline6: TextStyle(fontSize: 20,color: Colors.white)),
-        fontFamily: "Noto Serif"/*"laila"*/,
+        textTheme: TextTheme(
+          headline6: TextStyle(fontSize: 20, color: Colors.white),
+          headline5: TextStyle(fontSize: 30, color: Colors.green),
+          bodyText1:TextStyle(fontSize: 20, color: Colors.grey.shade500),
+        ),
+        fontFamily: "Noto Serif" /*"laila"*/,
         // iconTheme: IconThemeData(color:Colors.teal ),
 
         // textTheme: GoogleFonts.lailaTextTheme(
         //   Theme.of(context).textTheme,
         // ),
       ),
-      initialRoute:'/launch_screen' ,
+      initialRoute: '/launch_screen',
       routes: {
-        '/launch_screen':(BuildContext)=>LaunchScreen(),
-        '/register_screen':(BuildContext)=>RegisterScreen(),
-        '/login_screen':(BuildContext)=>LoginScreen(),
-        '/home_screen':(BuildContext)=>HomeScreen(),
-        '/add_note':(BuildContext)=>AddNote(),
+        '/launch_screen': (BuildContext) => LaunchScreen(),
+        '/register_screen': (BuildContext) => RegisterScreen(),
+        '/login_screen': (BuildContext) => LoginScreen(),
+        '/home_screen': (BuildContext) => HomeScreen(),
+        '/add_note': (BuildContext) => AddNote(),
 
         // '/home_screen':(BuildContext)=>HomeScreen(),
         // '/fb_storage':(BuildContext)=>FbStorage(),

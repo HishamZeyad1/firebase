@@ -72,8 +72,8 @@ class _EditNoteState extends State<EditNote> with Helpers {
                 // controller: _titleEditingController,
                 initialValue:widget.title,
                 validationFn: (val) {
-                  if (val != null && val.length > 25) {
-                    return "Note Title can not to be larger than 25";
+                  if (val != null && val.length > 100) {
+                    return "Note Title can not to be larger than 100";
                   } else if (val != null && val.length < 3) {
                     return "Note Title can not to be less than 3";
                   }
@@ -92,8 +92,8 @@ class _EditNoteState extends State<EditNote> with Helpers {
                 icon: Icons.description,
                 maxLine: 5,
                 validationFn: (val) {
-                  if (val != null && val.length > 100) {
-                    return "Note Details can not to be larger than 100";
+                  if (val != null && val.length > 300) {
+                    return "Note Details can not to be larger than 300";
                   } else if (val != null && val.length < 3) {
                     return "Note Details can not to be less than 3";
                   }
