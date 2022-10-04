@@ -6,6 +6,7 @@ import 'package:firebase/fb_storage.dart';
 import 'package:firebase/home_screen.dart';
 import 'package:firebase/register_screen.dart';
 import 'package:firebase/login_screen.dart';
+import 'package:firebase/test.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -65,7 +66,7 @@ class MyApp extends StatelessWidget {
         '/login_screen': (BuildContext) => LoginScreen(),
         '/home_screen': (BuildContext) => HomeScreen(),
         '/add_note': (BuildContext) => AddNote(),
-
+        '/test': (BuildContext) => Test(),
         // '/home_screen':(BuildContext)=>HomeScreen(),
         // '/fb_storage':(BuildContext)=>FbStorage(),
       },
