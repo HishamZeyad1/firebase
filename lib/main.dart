@@ -8,18 +8,29 @@ import 'package:firebase/register_screen.dart';
 import 'package:firebase/login_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'launch_screen.dart';
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
+  print("=========background=========");
+  print(message.notification!.title);
+  print(message.notification!.body);
+  print("Handling a background message: ${message.messageId}");
+  print("from : ${message.from}");
+  print("senderId: ${message.senderId}");
 
+
+}
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  print("=========main=========");
+WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
   );
-
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 
@@ -61,3 +72,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+

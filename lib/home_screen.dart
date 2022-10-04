@@ -1,8 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/edit_note.dart';
 import 'package:firebase/view_note_detials.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +19,74 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   CollectionReference noteref = FirebaseFirestore.instance.collection("notes");
   var pressedNote;
+
+  var fbm = FirebaseMessaging.instance;
+  initalMessage() async {
+    var message =   await FirebaseMessaging.instance.getInitialMessage() ;
+    if (message != null){
+      Navigator.of(context).pushNamed("/add_note") ;
+    }
+  }
+  requestPermssion() async {
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+
+  }
+  @override
+  void initState() {
+    print("=========initState=========");
+
+    // TODO: implement initState
+    super.initState();
+    requestPermssion() ;
+    initalMessage() ;
+    print("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+
+    fbm.getToken().then((value) {
+      print("================================");
+      print(value);
+      print("================================");
+    } );
+    //Forground Notification
+    FirebaseMessaging.onMessage.listen((event) {
+      print(event.notification);
+      print(event.senderId);
+      print(event.data);
+      print(event.notification!.title);
+      print(event.notification!.body);
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.success,
+          animType: AnimType.rightSlide,
+          title: event.notification!.title,
+          desc: event.notification!.body,
+          // btnCancelOnPress: () {},
+          // btnOkOnPress: () {},
+      )..show();
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      Navigator.of(context).pushNamed("/add_note");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print("UID: "+FirebaseAuth.instance.currentUser!.uid);
