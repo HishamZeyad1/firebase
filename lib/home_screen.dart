@@ -53,10 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     print("=========initState=========");
-
     // TODO: implement initState
     super.initState();
-    requestPermssion() ;
+    requestPermssion() ;//for ios
     initalMessage() ;
     print("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 

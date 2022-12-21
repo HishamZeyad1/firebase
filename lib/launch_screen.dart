@@ -18,7 +18,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
     bool isloged=FirebaseAuth.instance.currentUser!=null;
     Future.delayed(
       Duration(seconds: 3),
-      () => Navigator.pushReplacementNamed(context,isloged?'/test'/*'/home_screen'*/:'/login_screen'),
+      () => Navigator.pushReplacementNamed(context,/*isloged?*/'/test'/*'/home_screen':'/login_screen'*/),
     );
   }
 

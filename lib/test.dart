@@ -1,6 +1,8 @@
 // Replace with server token from firebase console settings.
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase/helper/fb_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class Test extends StatefulWidget {
   State<Test> createState() => _TestState();
 }
 
-class _TestState extends State<Test> {
+class _TestState extends State<Test> with FbNotifications {
   final String serverToken = 'AAAAbzRpdjY:APA91bFMniaxvu1MpX5eyAJAWi_RgDQS3Pq3Zi1lSaFujasohdKhjXt9R1L3QxUF9BdxVqFf4EU2eqbxq36jpcNgrTqtZ3k54zTkJuDAPKY79D2XGUrYDDnO5HfCn-u5WvCczNLst0Xi';
 
   sendNotify(String title,String body,String id) async {
@@ -46,6 +48,8 @@ class _TestState extends State<Test> {
   }
   getMessage(){
     FirebaseMessaging.onMessage.listen((message){
+      // AwesomeDialog(context: context,dialogType:DialogType.success,title:message.notification!.title,body:Text(message.notification!.body??""),);
+      // AlertDialog();
       print(message.notification!.title);
       print(message.notification!.body);
       print(message.data);
@@ -57,7 +61,10 @@ class _TestState extends State<Test> {
     print("hello");
     // TODO: implement initState
     super.initState();
+     requestNotificationPermissions();//for ios
     getMessage();
+    initializeForegroundNotificationForAndroid();
+    manageNotificationAction();
   }
   @override
   Widget build(BuildContext context) {

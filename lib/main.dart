@@ -1,6 +1,7 @@
 // import 'package:firebase/Archive/login_screen.dart';
 import 'package:firebase/add_note.dart';
 import 'package:firebase/fb_storage.dart';
+import 'package:firebase/helper/fb_notifications.dart';
 
 // import 'package:firebase/home_screen.dart.dart';
 import 'package:firebase/home_screen.dart';
@@ -21,8 +22,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print("Handling a background message: ${message.messageId}");
   print("from : ${message.from}");
   print("senderId: ${message.senderId}");
-
-
 }
 void main() async {
   print("=========main=========");
@@ -31,7 +30,8 @@ WidgetsFlutterBinding.ensureInitialized();
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await FbNotifications.initNotifications();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
 
